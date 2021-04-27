@@ -2,7 +2,8 @@ FROM golang:1.15-buster AS build-env
 
 # Install minimum necessary dependencies,
 ENV PACKAGES curl make git libc-dev bash gcc python3 ca-certificates
-RUN apt-get update && apt-get install --no-install-recommends -y $PACKAGES && apt-get clean
+RUN apt-get update && apt-get install --no-install-recommends -y $PACKAGES && \
+    rm -rf /var/lib/apt/lists/* && apt-get clean
 
 # Set working directory for the build
 WORKDIR /go/src/github.com/regen-network/regen-ledger
