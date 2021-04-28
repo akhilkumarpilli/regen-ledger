@@ -1,9 +1,16 @@
-FROM golang:1.15-buster AS build-env
+FROM ubuntu:18.04 AS build-env
 
 # Install minimum necessary dependencies,
-ENV PACKAGES curl make git libc-dev bash gcc python3 ca-certificates
-RUN apt-get update && apt-get install --no-install-recommends -y $PACKAGES && \
-    rm -rf /var/lib/apt/lists/* && apt-get clean
+RUN apt-get update -y && apt-get install -y build-essential git wget && apt-get clean
+RUN cd /tmp && \
+    wget https://dl.google.com/go/go1.15.linux-amd64.tar.gz && \
+    tar -xvf go1.15.linux-amd64.tar.gz && \
+    rm go1.15.linux-amd64.tar.gz && \
+    mv go /usr/local
+
+ENV GOROOT /usr/local/go
+ENV GOPATH $HOME/go
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
 
 # Set working directory for the build
 WORKDIR /go/src/github.com/regen-network/regen-ledger
